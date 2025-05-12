@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Portfolio</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+
+</head>
+<body>
+    <header class="navbar navbar-expand-lg px-3 navbar-dark bg-dark" id="navbar">
+
+        <a class="navbar-brand" href="/">MyPortfolio</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/Home/About">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="/Home/Projects">Projects</a></li>
+                <li class="nav-item"><a class="nav-link" href="/Home/Contact">Contact</a></li>
+                <li class="nav-item"><a class="nav-link" href="/Home/List"></a></li>
+                <li class="nav-item">
+                    <button id="themeToggleBtn" class="btn btn-sm btn-outline-light ms-2" onclick="toggleTheme()">Switch to Light Mode</button>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <main class="container mt-4">
+        @RenderBody()
+    </main>
+
+    <footer class="text-center py-3 mt-5" id="site-footer">
+        <p class="mb-0">&copy; 2025 MyPortfolio | Built with ASP.NET Core</p>
+    </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const savedTheme = localStorage.getItem("theme") || "dark";
+            document.documentElement.setAttribute("data-theme", savedTheme);
+            updateButton(savedTheme);
+            updateNavbar(savedTheme);
+        });
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute("data-theme") || "dark";
+            const newTheme = currentTheme === "light" ? "dark" : "light";
+            document.documentElement.setAttribute("data-theme", newTheme);
+            localStorage.setItem("theme", newTheme);
+            updateButton(newTheme);
+            updateNavbar(newTheme);
+        }
+
+        function updateButton(theme) {
+            const btn = document.getElementById("themeToggleBtn");
+            btn.textContent = theme === "light" ? "Switch to Dark Mode" : "Switch to Light Mode";
+            // Make sure the button remains visible, especially when hovering.
+            btn.classList.remove('btn-outline-light', 'btn-outline-dark');
+            btn.classList.add('btn-light', 'btn-dark');
+        }
+
+        function updateNavbar(theme) {
+            const navbar = document.getElementById("navbar");
+            if (theme === "light") {
+                navbar.classList.remove("navbar-dark", "bg-dark");
+                navbar.classList.add("navbar-light", "bg-light");
+            } else {
+                navbar.classList.remove("navbar-light", "bg-light");
+                navbar.classList.add("navbar-dark", "bg-dark");
+            }
+        }
+    </script>
+    @RenderSection("Scripts", required: false)
+
+
+
+</body>
+</html>
+
+    

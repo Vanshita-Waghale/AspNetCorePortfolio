@@ -1,0 +1,16 @@
+﻿# Ignore Visual Studio folders
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignore build folders
+bin/
+obj/
+
+# Ignore runtime and local config files
+*.db
+*.mdf
+*.ldf
+appsettings.Development.json
