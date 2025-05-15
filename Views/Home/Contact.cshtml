@@ -4,37 +4,67 @@
     ViewData["Title"] = "Contact";
 }
 
-<h2>Contact Me</h2>
+<div class="contact-page">
+    @* Make sure this view is in an MVC Razor View like Views/Home/Contact.cshtml *@
 
-@if (TempData["Message"] != null)
-{
-    <div class="alert alert-success">@TempData["Message"]</div>
-}
+    <div class="contact-page" style="display: flex; gap: 3rem; padding: 2rem;">
+        <div class="contact-left" style="flex: 1;">
+            <h1>Contact</h1>
+            <h2>Get In Touch</h2>
 
-<form asp-controller="Contacts" asp-action="Submit" method="post">
-    @Html.AntiForgeryToken()
+            <!-- Animated Image -->
+            <img src="~/Contactimg.png" alt="Contact Image" class="animated-image" style="width: 100%; max-width: 400px; margin: 1rem 0; animation: float 3s ease-in-out infinite;" />
 
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+            <p class="motivational-msg" style="font-style: italic;">Let’s build something meaningful together.</p>
+
+            <ul class="contact-info" style="list-style-type: none; padding-left: 0;">
+                <li><strong>Email:</strong> youremail@example.com</li>
+                <li>
+                    <strong>GitHub:</strong>
+                    <a href="https://github.com/yourusername" target="_blank">github.com/yourusername</a>
+                </li>
+                <li>
+                    <strong>LinkedIn:</strong>
+                    <a href="https://linkedin.com/in/yourprofile" target="_blank">linkedin.com/in/yourprofile</a>
+                </li>
+            </ul>
+
+            <!-- Social Media Icons -->
+            <div class="social-icons" style="margin-top: 1.5rem;">
+                <a href="https://github.com/yourusername" target="_blank">
+                    <img src="~/images/github-icon.png" alt="GitHub" style="width: 40px; margin-right: 10px;">
+                </a>
+                <a href="https://linkedin.com/in/yourprofile" target="_blank">
+                    <img src="~/images/linkedin-icon.png" alt="LinkedIn" style="width: 40px; margin-right: 10px;">
+                </a>
+                <a href="mailto:youremail@example.com">
+                    <img src="~/images/email-icon.png" alt="Email" style="width: 40px;">
+                </a>
+            </div>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+
+
+    <div class="contact-right">
+        <h2 class="lets-build">Let’s build something amazing together</h2>
+        <form asp-action="Contact" method="post">
+            <div class="form-group">
+                <input type="text" name="Name" class="form-control" placeholder="Your Name" required />
+            </div>
+            <div class="form-group">
+                <input type="email" name="Email" class="form-control" placeholder="Your Email" required />
+            </div>
+            <div class="form-group">
+                <textarea name="Message" class="form-control" placeholder="Your Message" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn">Send Message</button>
+        </form>
     </div>
+</div>
 
-    <div class="form-group">
-        <label asp-for="Message"></label>
-        <textarea asp-for="Message" class="form-control"></textarea>
-        <span asp-validation-for="Message" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary mt-3">Submit</button>
-</form>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+<div class="floating-shapes">
+    <div class="shape circle"></div>
+    <div class="shape triangle"></div>
+    <div class="shape square"></div>
+</div>
