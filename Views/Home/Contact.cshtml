@@ -1,70 +1,217 @@
 ﻿@model VicStarDevPortfolio.Models.Contact
-
 @{
     ViewData["Title"] = "Contact";
 }
 
-<div class="contact-page">
-    @* Make sure this view is in an MVC Razor View like Views/Home/Contact.cshtml *@
-
-    <div class="contact-page" style="display: flex; gap: 3rem; padding: 2rem;">
-        <div class="contact-left" style="flex: 1;">
-            <h1>Contact</h1>
-            <h2>Get In Touch</h2>
-
-            <!-- Animated Image -->
-            <img src="~/Contactimg.png" alt="Contact Image" class="animated-image" style="width: 100%; max-width: 400px; margin: 1rem 0; animation: float 3s ease-in-out infinite;" />
-
-            <p class="motivational-msg" style="font-style: italic;">Let’s build something meaningful together.</p>
-
-            <ul class="contact-info" style="list-style-type: none; padding-left: 0;">
-                <li><strong>Email:</strong> youremail@example.com</li>
-                <li>
-                    <strong>GitHub:</strong>
-                    <a href="https://github.com/yourusername" target="_blank">github.com/yourusername</a>
-                </li>
-                <li>
-                    <strong>LinkedIn:</strong>
-                    <a href="https://linkedin.com/in/yourprofile" target="_blank">linkedin.com/in/yourprofile</a>
-                </li>
-            </ul>
-
-            <!-- Social Media Icons -->
-            <div class="social-icons" style="margin-top: 1.5rem;">
-                <a href="https://github.com/yourusername" target="_blank">
-                    <img src="~/images/github-icon.png" alt="GitHub" style="width: 40px; margin-right: 10px;">
-                </a>
-                <a href="https://linkedin.com/in/yourprofile" target="_blank">
-                    <img src="~/images/linkedin-icon.png" alt="LinkedIn" style="width: 40px; margin-right: 10px;">
-                </a>
-                <a href="mailto:youremail@example.com">
-                    <img src="~/images/email-icon.png" alt="Email" style="width: 40px;">
-                </a>
-            </div>
+<div class="contact-container">
+    <div class="contact-left">
+        <div style="text-align: center;">
+            <span style="font-size: 2.5rem; font-weight: bold; color:orange">Contact</span>
+            <span style="font-size: 1.2rem; margin-left: 10px;">Get In Touch</span>
         </div>
+
+
+        <img src="~/Contactimg.png" alt="Contact Image" />
+        <p>Feel free to reach out to me via email at waghalevanshita04@gmail.com for any collaboration or inquiries.</p>
+
+        <ul class="social-icons">
+            <li>
+                <a href="waghalevanshita04@gmail.com" target="_blank" class="contact-icon">
+                    <img src="~/images/email.png" alt="Email" />
+                </a>
+            </li>
+            <li>
+                <a href="https://github.com/Vanshita-Waghale" target="_blank" class="contact-icon">
+                    <img src="~/images/github1.png" alt="GitHub" />
+                </a>
+            </li>
+            <li>
+                <a href="https://www.linkedin.com/in/vanshita-waghale-62721124a/" target="_blank" class="contact-icon">
+                    <img src="~/images/linkedin.png" alt="LinkedIn" />
+                </a>
+            </li>
+        </ul>
     </div>
-
-
 
     <div class="contact-right">
-        <h2 class="lets-build">Let’s build something amazing together</h2>
-        <form asp-action="Contact" method="post">
-            <div class="form-group">
-                <input type="text" name="Name" class="form-control" placeholder="Your Name" required />
+        <p style="font-size: 1.5rem;">Let’s build something amazing together</p>
+
+        @if (ViewBag.ShowCard != null && (bool)ViewBag.ShowCard)
+        {
+            <div class="card message-card">
+                <h3>🎉 Let’s Celebrate!</h3>
+                <p>Thanks for connecting!</p>
+                <p>Did you like my website? Show some ❤️</p>
+
+                <div class="emoji-feedback">
+                    <span class="emoji red-heart" onclick="sendFeedback('❤️')">❤️</span>
+                    <span class="emoji black-heart" onclick="sendFeedback('🖤')">🖤</span>
+                </div>
+
+                <div id="finalThanks" class="thank-you-message">
+                    Your response is saved. Thanks for your valuable feedback.
+                </div>
             </div>
-            <div class="form-group">
-                <input type="email" name="Email" class="form-control" placeholder="Your Email" required />
-            </div>
-            <div class="form-group">
-                <textarea name="Message" class="form-control" placeholder="Your Message" rows="4" required></textarea>
-            </div>
-            <button type="submit" class="btn">Send Message</button>
-        </form>
+        }
+        else
+        {
+            <form asp-controller="Contacts" asp-action="Submit" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <input type="text" name="Name" class="form-control" placeholder="Your Name" required />
+                </div>
+
+                <div class="form-group">
+                    <input type="email" name="Email" class="form-control" placeholder="Your Email" required />
+                </div>
+
+                <div class="form-group">
+                    <textarea name="Message" class="form-control" placeholder="Your Message" rows="4" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-outline-primary">Send Message</button>
+                </div>
+            </form>
+        }
     </div>
 </div>
 
-<div class="floating-shapes">
-    <div class="shape circle"></div>
-    <div class="shape triangle"></div>
-    <div class="shape square"></div>
-</div>
+<style>
+    .contact-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: stretch;
+        gap: 2rem;
+        padding: 2rem;
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    .contact-left,
+    .contact-right {
+        flex: 1;
+        min-width: 300px;
+        max-width: 500px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+        .contact-left img {
+            width: 100%;
+            max-width: 250px;
+            margin: 1rem auto;
+        }
+
+        .contact-left h1,
+        .contact-left h2,
+        .contact-left p {
+            text-align: center;
+        }
+
+        .contact-left p {
+            font-style: italic;
+        }
+
+    .social-icons {
+        list-style-type: none;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        /* margin-top: 0.5rem; */
+        flex-wrap: wrap;
+    }
+
+    .contact-icon img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .contact-icon:hover img {
+        transform: scale(1.2);
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .message-card {
+        padding: 1.5rem;
+        border: 2px solid purple;
+        text-align: center;
+        background: #fdf7ff;
+        border-radius: 8px;
+    }
+
+    .emoji-feedback {
+        font-size: 2.5rem;
+        margin-top: 1rem;
+    }
+
+    .emoji {
+        cursor: pointer;
+        margin: 0 1rem;
+        transition: transform 0.3s ease;
+        display: inline-block;
+        position: relative;
+    }
+
+        .emoji:hover {
+            transform: scale(1.3);
+        }
+
+    .thank-you-message {
+        display: none;
+        color: green;
+        margin-top: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 2rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1rem;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    button.btn {
+        padding: 0.6rem 1.5rem;
+        font-size: 1rem;
+        cursor: pointer;
+        width: 100%;
+        display: block;
+        margin-top: 1rem;
+    }
+
+    /* ✅ Media Query Fix */
+    @@media (max-width: 768px) {
+        .contact-container
+
+    {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .contact-left,
+    .contact-right {
+        max-width: 100%;
+    }
+
+        .contact-left img {
+            margin: 1rem auto;
+        }
+
+    .message-card {
+        margin-top: 1rem;
+    }
+
+    }
+</style>

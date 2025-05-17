@@ -3,24 +3,222 @@
 }
 
 <div class="container my-5">
-    <h1 class="mb-4">About Me</h1>
+    <h1 class="mb-4 text-orange" style="font-size: 2.5rem;">About Me</h1>
 
+   
+    <!-- Typing animation -->
     <div class="typing-container">
-        Hello! I'm a passionate Software Developer skilled in C#, .NET, Python, React, and more.
+        <span id="typingText"></span><span class="cursor">|</span>
     </div>
 
+    <p>Hello! I'm a passionate Software Developer skilled in C#, .NET, Python, React, and more.</p>
     <p>I love learning new things, traveling, painting, and creating artistic pieces. 🌟</p>
 
-    <h3 class="mt-5">Technical Skills:</h3>
-    <ul class="skills-list">
-        <li>Languages: Java, C++, Python, C#, JavaScript</li>
-        <li>Frameworks: .NET Core, ASP.NET, Spring Boot, FastAPI</li>
-        <li>Frontend: React.js, Redux, HTML, CSS, Bootstrap</li>
-        <li>Database: SQL Server, MySQL, SQLite</li>
-        <li>Other: GitHub, Postman, Power BI</li>
-    </ul>
+    <h3 class="mt-5">Technical Skills</h3>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="skill-bar mb-3">
+                <label>Java</label>
+                <div class="progress">
+                    <div class="progress-bar bg-info" data-skill="50">Beginner</div>
+                </div>
+            </div>
+            <div class="skill-bar mb-3">
+                <label>Python</label>
+                <div class="progress">
+                    <div class="progress-bar bg-info" data-skill="60">Intermediate</div>
+                </div>
+            </div>
+            <div class="skill-bar mb-3">
+                <label>C# / .NET Core</label>
+                <div class="progress">
+                    <div class="progress-bar bg-info" data-skill="45">Beginner</div>
+                </div>
+            </div>
+            <div class="skill-bar mb-3">
+                <label>React.js</label>
+                <div class="progress">
+                    <div class="progress-bar bg-info" data-skill="55">Intermediate</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="skill-bar mb-3">
+                <label>SQL / MySQL</label>
+                <div class="progress">
+                    <div class="progress-bar bg-info" data-skill="60">Intermediate</div>
+                </div>
+            </div>
+            <div class="skill-bar mb-3">
+                <label>HTML</label>
+                <div class="progress">
+                    <div class="progress-bar bg-info" data-skill="72">Intermediate</div>
+                </div>
+            </div>
+            <div class="skill-bar mb-3">
+                <label>JavaScript</label>
+                <div class="progress">
+                    <div class="progress-bar bg-info" data-skill="75">Intermediate</div>
+                </div>
+            </div>
+            <div class="skill-bar mb-3">
+                <label>CSS</label>
+                <div class="progress">
+                    <div class="progress-bar bg-info" data-skill="62">Intermediate</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mt-5">Professional Skills</h3>
+    <div class="row text-center">
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+            <div class="gauge-container">
+                <canvas id="gaugeTeamwork" width="100" height="100"></canvas>
+                <div class="gauge-label">Teamwork</div>
+                <div class="gauge-percent" id="labelTeamwork"></div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+            <div class="gauge-container">
+                <canvas id="gaugeCreativity" width="100" height="100"></canvas>
+                <div class="gauge-label">Creativity</div>
+                <div class="gauge-percent" id="labelCreativity"></div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+            <div class="gauge-container">
+                <canvas id="gaugeProject" width="100" height="100"></canvas>
+                <div class="gauge-label">Project Management</div>
+                <div class="gauge-percent" id="labelProject"></div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+            <div class="gauge-container">
+                <canvas id="gaugeCommunication" width="100" height="100"></canvas>
+                <div class="gauge-label">Communication</div>
+                <div class="gauge-percent" id="labelCommunication"></div>
+            </div>
+        </div>
+    </div>
+
     <h3 class="mt-5">Download My Resume</h3>
     <p>If you'd like to learn more about my skills and experience, feel free to download my resume:</p>
-    <a href="~/files/your-resume.pdf" class="btn btn-success" target="_blank">Download Resume</a>
-
+    <a href="@Url.Content("~/files/your-resume.pdf")" class="btn btn-success" target="_blank">Download Resume</a>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            function createGauge(canvasId, labelId, percent) {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Skill', 'Remaining'],
+                        datasets: [{
+                            data: [percent, 100 - percent],
+                            backgroundColor: ['orange', '#e0e0e0'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        cutout: '70%',
+                        animation: {
+                            animateRotate: true,
+                            duration: 1500
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { enabled: false }
+                        }
+                    }
+                });
+
+                const label = document.getElementById(labelId);
+                if (label) label.innerText = percent + '%';
+            }
+
+            // Animate progress bars
+            const skillBars = document.querySelectorAll('.progress-bar');
+            skillBars.forEach(bar => {
+                const targetWidth = bar.getAttribute('data-skill');
+                bar.style.width = '0%';
+                bar.innerText = '';
+                setTimeout(() => {
+                    bar.style.transition = 'width 1s ease-in-out';
+                    bar.style.width = targetWidth + '%';
+                    bar.innerText = targetWidth + '%';
+                }, 500);
+            });
+
+            // Load gauges
+            createGauge('gaugeTeamwork', 'labelTeamwork', 90);
+            createGauge('gaugeCreativity', 'labelCreativity', 70);
+            createGauge('gaugeProject', 'labelProject', 55);
+            createGauge('gaugeCommunication', 'labelCommunication', 70);
+
+            // Typing effect
+            const text = "Hello! I'm a passionate Software Developer skilled in Java, Python, HTML, CSS, JavaScript, ASP.NET, React.";
+            let index = 0;
+            const typingText = document.getElementById("typingText");
+
+            function typeEffect() {
+                if (index < text.length) {
+                    typingText.innerHTML += text.charAt(index);
+                    index++;
+                    setTimeout(typeEffect, 40);
+                }
+            }
+
+            setTimeout(typeEffect, 1800); // delay to allow bars/gauges to finish
+        });
+    </script>
+}
+
+<style>
+    .gauge-container {
+        position: relative;
+        width: 120px;
+        margin: auto;
+    }
+
+    .gauge-label {
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    .gauge-percent {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: bold;
+        font-size: 18px;
+        color: #333;
+    }
+
+    .text-orange {
+        color: orange !important;
+    }
+
+    .typing-container {
+        font-size: 18px;
+        font-weight: bold;
+        white-space: nowrap;
+        overflow: hidden;
+        border-right: 2px solid orange;
+    }
+
+    .cursor {
+        display: inline-block;
+        animation: blink 0.8s infinite;
+        color: orange;
+    }
+
+</style>

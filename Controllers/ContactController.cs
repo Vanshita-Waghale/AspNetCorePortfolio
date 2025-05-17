@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VicStarDevPortfolio.Data;
@@ -71,17 +72,36 @@ namespace VicStarDevPortfolio.Controllers
             _context.SaveChanges();
             return RedirectToAction(nameof(List));
         }
+            [HttpPost]
+            [ValidateAntiForgeryToken]
+            public async Task<IActionResult> Submit(Contact contact)
+            {
+                if (!ModelState.IsValid)
+                    return RedirectToAction("Contact", "Home");
 
-        [HttpPost]
-        public async Task<IActionResult> Submit(Contact contact)
-        {
-            if (!ModelState.IsValid) return View("Contact", contact);
+                _context.Contacts.Add(contact);
+                await _context.SaveChangesAsync();
 
-            _context.Contacts.Add(contact);
-            await _context.SaveChangesAsync();
+                TempData["ShowCard"] = true;
+                return RedirectToAction("Contact", "Home");
+            }
 
-            TempData["Message"] = "Thanks for reaching out!";
-            return RedirectToAction("Contact", "Home");
+            [HttpPost]
+            public IActionResult SaveFeedback([FromBody] EmojiFeedback feedback)
+            {
+                if (!string.IsNullOrWhiteSpace(feedback.Emoji))
+                {
+                    // Log emoji feedback
+                    Console.WriteLine($"User emoji feedback: {feedback.Emoji}");
+                    return Ok();
+                }
+                return BadRequest();
+            }
         }
-    }
+
+        public class EmojiFeedback
+        {
+            public string Emoji { get; set; }
+        }
+
 }

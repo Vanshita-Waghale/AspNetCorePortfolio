@@ -1,9 +1,198 @@
 ﻿@{
     ViewData["Title"] = "Home";
+    int visitorCount = 1234; // Replace with dynamic value later
+    int projectCount = 8;    // Replace with real-time count from DB if needed
 }
-<div class="text-center">
-    <h1 class="display-4 animate-text">Hi, I'm Vanshita Waghale 🚀</h1>
-    <div class="typing-container">Software Developer | Coder | Creative Artist</div>
-    <p class="lead mt-4">Welcome to my portfolio website!</p>
-    <a class="btn btn-primary mt-3" href="/Home/About">Learn more about me</a>
+
+<div class="home-container d-flex align-items-center justify-content-center">
+    <!-- Left Section -->
+    <div class="left-section">
+        <h1 class="intro-title">Hi, I'm <span class="highlight">Vanshita Waghale 🚀</span></h1>
+        <div class="typing-container mt-2">Software Developer | Coder | Creative Artist</div>
+        <p class="lead mt-4">Welcome to my creative portfolio world!</p>
+
+        <div class="stats mt-4">
+            <div><strong>👁️ Visitors:</strong> @visitorCount</div>
+            <div><strong>📂 Projects:</strong> @projectCount</div>
+        </div>
+
+        <a class="btn btn-warning mt-4" href="/Home/About">Learn more about me</a>
+    </div>
+
+    <!-- Right Dashed Rotating Circle with Image -->
+    <div class="right-section">
+        <div class="dashed-circle">
+            <img src="~/images/profile.png" alt="Profile Image" class="profile-image" />
+        </div>
+    </div>
 </div>
+
+<style>
+    .home-container {
+        height: 100vh;
+        padding: 0 5%;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .left-section {
+        flex: 1 1 400px;
+        padding: 1rem 2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-width: 300px;
+    }
+
+    .right-section {
+        flex: 1 1 300px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-width: 280px;
+        padding: 1rem;
+    }
+
+    .intro-title {
+        font-size: 2.8rem;
+        font-weight: bold;
+    }
+
+    .highlight {
+        color: #f9a825;
+    }
+
+    .typing-container {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .stats {
+        font-size: 1rem;
+        margin-top: 20px;
+    }
+
+    .btn-warning {
+        font-weight: 600;
+        padding: 0.6rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 30px;
+        transition: 0.3s ease-in-out;
+        background-color: #f9a825;
+        border: none;
+        color: #000;
+    }
+
+        .btn-warning:hover {
+            background-color: #ffd54f;
+            color: #000;
+        }
+
+    .dashed-circle {
+        width: 360px;
+        height: 360px;
+        border: 2px dashed #f9a825;
+        border-radius: 50%;
+        animation: rotateCircle 10s linear infinite;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .profile-image {
+        width: 220px;
+        height: 220px;
+        object-fit: cover;
+        border-radius: 50%;
+        z-index: 1;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    @@keyframes rotateCircle {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* Responsive tweaks */
+    @@media (max-width: 992px) {
+        .intro-title {
+            font-size: 2.2rem;
+        }
+
+        .typing-container {
+            font-size: 1.1rem;
+        }
+
+        .dashed-circle {
+            width: 280px;
+            height: 280px;
+        }
+
+        .profile-image {
+            width: 180px;
+            height: 180px;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .home-container {
+            flex-direction: column;
+            text-align: center;
+            height: auto;
+            padding: 2rem 1rem;
+        }
+
+        .left-section,
+        .right-section {
+            width: 100%;
+            padding: 1rem 0;
+        }
+
+        .dashed-circle {
+            width: 240px;
+            height: 240px;
+        }
+
+        .profile-image {
+            width: 160px;
+            height: 160px;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .intro-title {
+            font-size: 1.8rem;
+        }
+
+        .typing-container {
+            font-size: 1rem;
+        }
+
+        .stats {
+            font-size: 0.95rem;
+        }
+
+        .btn-warning {
+            font-size: 0.9rem;
+        }
+
+        .dashed-circle {
+            width: 200px;
+            height: 200px;
+        }
+
+        .profile-image {
+            width: 140px;
+            height: 140px;
+        }
+    }
+</style>
