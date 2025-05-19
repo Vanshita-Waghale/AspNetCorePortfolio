@@ -86,22 +86,22 @@ namespace VicStarDevPortfolio.Controllers
                 return RedirectToAction("Contact", "Home");
             }
 
-            [HttpPost]
-            public IActionResult SaveFeedback([FromBody] EmojiFeedback feedback)
-            {
-                if (!string.IsNullOrWhiteSpace(feedback.Emoji))
-                {
-                    // Log emoji feedback
-                    Console.WriteLine($"User emoji feedback: {feedback.Emoji}");
-                    return Ok();
-                }
-                return BadRequest();
-            }
+            //[HttpPost]
+            //public IActionResult SaveFeedback([FromBody] EmojiFeedback feedback)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(feedback.Emoji))
+            //    {
+            //        // Log emoji feedback
+            //        Console.WriteLine($"User emoji feedback: {feedback.Emoji}");
+            //        return Ok();
+            //    }
+            //    return BadRequest();
+            //}
         }
 
-        public class EmojiFeedback
-        {
-            public string Emoji { get; set; }
-        }
+        //public class EmojiFeedback
+        //{
+        //    public string Emoji { get; set; }
+        //}
 
 }

@@ -10,13 +10,12 @@
             <span style="font-size: 1.2rem; margin-left: 10px;">Get In Touch</span>
         </div>
 
-
         <img src="~/Contactimg.png" alt="Contact Image" />
         <p>Feel free to reach out to me via email at waghalevanshita04@gmail.com for any collaboration or inquiries.</p>
 
         <ul class="social-icons">
             <li>
-                <a href="waghalevanshita04@gmail.com" target="_blank" class="contact-icon">
+                <a href="mailto:https://www.gmail.com" target="_blank" class="contact-icon">
                     <img src="~/images/email.png" alt="Email" />
                 </a>
             </li>
@@ -78,6 +77,30 @@
     </div>
 </div>
 
+@section Scripts {
+    <script>
+        let hasClicked = false;
+
+        function sendFeedback(emoji) {
+            if (hasClicked) return;
+
+            hasClicked = true;
+
+            //Optional: Send to server using fetch (if endpoint exists)
+                    fetch('/Feedback/SaveHeart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ emoji: emoji })
+        });
+
+
+            document.getElementById("finalThanks").style.display = "block";
+        }
+    </script>
+}
+
 <style>
     .contact-container {
         display: flex;
@@ -107,13 +130,8 @@
             margin: 1rem auto;
         }
 
-        .contact-left h1,
-        .contact-left h2,
         .contact-left p {
             text-align: center;
-        }
-
-        .contact-left p {
             font-style: italic;
         }
 
@@ -123,7 +141,6 @@
         display: flex;
         justify-content: center;
         gap: 1rem;
-        /* margin-top: 0.5rem; */
         flex-wrap: wrap;
     }
 
@@ -157,7 +174,6 @@
         margin: 0 1rem;
         transition: transform 0.3s ease;
         display: inline-block;
-        position: relative;
     }
 
         .emoji:hover {
@@ -168,6 +184,7 @@
         display: none;
         color: green;
         margin-top: 1rem;
+        font-weight: bold;
     }
 
     .form-group {
@@ -191,27 +208,23 @@
         margin-top: 1rem;
     }
 
-    /* ✅ Media Query Fix */
     @@media (max-width: 768px) {
-        .contact-container
-
-    {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .contact-left,
-    .contact-right {
-        max-width: 100%;
-    }
-
-        .contact-left img {
-            margin: 1rem auto;
+        .contact-container {
+            flex-direction: column;
+            align-items: center;
         }
 
-    .message-card {
-        margin-top: 1rem;
-    }
+        .contact-left,
+        .contact-right {
+            max-width: 100%;
+        }
 
+            .contact-left img {
+                margin: 1rem auto;
+            }
+
+        .message-card {
+            margin-top: 1rem;
+        }
     }
 </style>

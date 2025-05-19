@@ -11,7 +11,7 @@
         <span id="typingText"></span><span class="cursor">|</span>
     </div>
 
-    <p>Hello! I'm a passionate Software Developer skilled in C#, .NET, Python, React, and more.</p>
+    <p>Hello! I'm a passionate Software Developer skilled in Java,Python,React,C#,.NET</p>
     <p>I love learning new things, traveling, painting, and creating artistic pieces. 🌟</p>
 
     <h3 class="mt-5">Technical Skills</h3>
@@ -119,20 +119,15 @@
                 new Chart(ctx, {
                     type: 'doughnut',
                     data: {
-                        labels: ['Skill', 'Remaining'],
                         datasets: [{
                             data: [percent, 100 - percent],
-                            backgroundColor: ['orange', '#e0e0e0'],
+                            backgroundColor: ['orange', '#444'],
                             borderWidth: 0
                         }]
                     },
                     options: {
+                        cutout: '75%',
                         responsive: true,
-                        cutout: '70%',
-                        animation: {
-                            animateRotate: true,
-                            duration: 1500
-                        },
                         plugins: {
                             legend: { display: false },
                             tooltip: { enabled: false }
@@ -200,7 +195,7 @@
         transform: translate(-50%, -50%);
         font-weight: bold;
         font-size: 18px;
-        color: #333;
+        color: var(--gauge-text-color);
     }
 
     .text-orange {
