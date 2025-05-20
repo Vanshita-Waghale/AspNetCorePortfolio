@@ -3,29 +3,31 @@
     ViewData["Title"] = "Contact";
 }
 
-<div class="contact-container">
+<div id="contactSection" class="contact-container">
     <div class="contact-left">
         <div style="text-align: center;">
-            <span style="font-size: 2.5rem; font-weight: bold; color:orange">Contact</span>
+            <span style="font-size: 2.5rem; font-weight: bold; color: orange;">Contact</span>
             <span style="font-size: 1.2rem; margin-left: 10px;">Get In Touch</span>
         </div>
 
         <img src="~/Contactimg.png" alt="Contact Image" />
-        <p>Feel free to reach out to me via email at waghalevanshita04@gmail.com for any collaboration or inquiries.</p>
+        <p style="text-align: center;">
+            Feel free to reach out to me via email at <strong>waghalevanshita04@gmail.com</strong> for any collaboration or inquiries.
+        </p>
 
         <ul class="social-icons">
             <li>
-                <a href="mailto:https://www.gmail.com" target="_blank" class="contact-icon">
+                <a href="mailto:waghalevanshita04@gmail.com">
                     <img src="~/images/email.png" alt="Email" />
                 </a>
             </li>
             <li>
-                <a href="https://github.com/Vanshita-Waghale" target="_blank" class="contact-icon">
+                <a href="https://github.com/Vanshita-Waghale" target="_blank">
                     <img src="~/images/github1.png" alt="GitHub" />
                 </a>
             </li>
             <li>
-                <a href="https://www.linkedin.com/in/vanshita-waghale-62721124a/" target="_blank" class="contact-icon">
+                <a href="https://www.linkedin.com/in/vanshita-waghale-62721124a/" target="_blank">
                     <img src="~/images/linkedin.png" alt="LinkedIn" />
                 </a>
             </li>
@@ -43,8 +45,8 @@
                 <p>Did you like my website? Show some ❤️</p>
 
                 <div class="emoji-feedback">
-                    <span class="emoji red-heart" onclick="sendFeedback('❤️')">❤️</span>
-                    <span class="emoji black-heart" onclick="sendFeedback('🖤')">🖤</span>
+                    <span class="emoji" onclick="sendFeedback('❤️')">❤️</span>
+                    <span class="emoji" onclick="sendFeedback('🖤')">🖤</span>
                 </div>
 
                 <div id="finalThanks" class="thank-you-message">
@@ -54,24 +56,28 @@
         }
         else
         {
-            <form asp-controller="Contacts" asp-action="Submit" method="post">
+            <form asp-controller="Contacts" asp-action="Submit" method="post" novalidate>
                 @Html.AntiForgeryToken()
 
                 <div class="form-group">
-                    <input type="text" name="Name" class="form-control" placeholder="Your Name" required />
+                    <label asp-for="Name">Name</label>
+                    <input asp-for="Name" class="form-control" placeholder="Your Name" required />
+                    <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    <input type="email" name="Email" class="form-control" placeholder="Your Email" required />
+                    <label asp-for="Email">Email</label>
+                    <input asp-for="Email" class="form-control" placeholder="Your Email" required />
+                    <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    <textarea name="Message" class="form-control" placeholder="Your Message" rows="4" required></textarea>
+                    <label asp-for="Message">Message</label>
+                    <textarea asp-for="Message" class="form-control" rows="4" placeholder="Your Message" required></textarea>
+                    <span asp-validation-for="Message" class="text-danger"></span>
                 </div>
 
-                <div class="form-group">
-                    <button type="submit" class="btn btn-outline-primary">Send Message</button>
-                </div>
+                <button type="submit" class="btn btn-outline-primary">Send Message</button>
             </form>
         }
     </div>
@@ -83,78 +89,67 @@
 
         function sendFeedback(emoji) {
             if (hasClicked) return;
-
             hasClicked = true;
 
-            //Optional: Send to server using fetch (if endpoint exists)
-                    fetch('/Feedback/SaveHeart', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ emoji: emoji })
-        });
-
+            fetch('/Feedback/SaveHeart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ emoji: emoji })
+            });
 
             document.getElementById("finalThanks").style.display = "block";
         }
     </script>
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }
 
 <style>
+    #contactSection {
+        scroll-margin-top: 120px;
+    }
+
     .contact-container {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        align-items: stretch;
         gap: 2rem;
         padding: 2rem;
         max-width: 1200px;
         margin: auto;
     }
 
-    .contact-left,
-    .contact-right {
+    .contact-left, .contact-right {
         flex: 1;
         min-width: 300px;
         max-width: 500px;
         box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
     }
 
         .contact-left img {
             width: 100%;
             max-width: 250px;
             margin: 1rem auto;
-        }
-
-        .contact-left p {
-            text-align: center;
-            font-style: italic;
+            display: block;
         }
 
     .social-icons {
-        list-style-type: none;
+        list-style: none;
         padding: 0;
         display: flex;
         justify-content: center;
         gap: 1rem;
-        flex-wrap: wrap;
     }
 
-    .contact-icon img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+        .social-icons img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
 
-    .contact-icon:hover img {
-        transform: scale(1.2);
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
-    }
+            .social-icons img:hover {
+                transform: scale(1.2);
+            }
 
     .message-card {
         padding: 1.5rem;
@@ -173,7 +168,6 @@
         cursor: pointer;
         margin: 0 1rem;
         transition: transform 0.3s ease;
-        display: inline-block;
     }
 
         .emoji:hover {
@@ -188,43 +182,36 @@
     }
 
     .form-group {
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
     }
 
     .form-control {
         width: 100%;
         padding: 0.75rem;
         font-size: 1rem;
-        border-radius: 5px;
         border: 1px solid #ccc;
+        border-radius: 5px;
     }
 
-    button.btn {
+    .btn {
         padding: 0.6rem 1.5rem;
         font-size: 1rem;
         cursor: pointer;
-        width: 100%;
         display: block;
-        margin-top: 1rem;
+        width: 100%;
     }
 
     @@media (max-width: 768px) {
-        .contact-container {
-            flex-direction: column;
-            align-items: center;
-        }
+        .contact-container
 
-        .contact-left,
-        .contact-right {
-            max-width: 100%;
-        }
+    {
+        flex-direction: column;
+        align-items: center;
+    }
 
-            .contact-left img {
-                margin: 1rem auto;
-            }
+    .contact-left, .contact-right {
+        max-width: 100%;
+    }
 
-        .message-card {
-            margin-top: 1rem;
-        }
     }
 </style>
