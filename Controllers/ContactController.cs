@@ -1,6 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VicStarDevPortfolio.Data;
 using VicStarDevPortfolio.Models;
@@ -16,92 +16,96 @@ namespace VicStarDevPortfolio.Controllers
             _context = context;
         }
 
-        public IActionResult List()
+        // Reusable admin check (based on session or cookie)
+        private bool IsAdmin()
         {
-            var contacts = _context.Contacts.ToList();
+            var session = HttpContext.Session.GetString("IsAdmin");
+            var cookie = Request.Cookies["IsAdmin"];
+            return session == "true" || cookie == "true";
+        }
+
+        public async Task<IActionResult> List()
+        {
+            if (!IsAdmin())
+                return RedirectToAction("Login", "Admin");
+
+            var contacts = await Task.Run(() => _context.Contacts.ToList());
             return View(contacts);
         }
 
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var contact = _context.Contacts.FirstOrDefault(c => c.Id == id);
+            if (!IsAdmin())
+                return RedirectToAction("Login", "Admin");
+
+            var contact = await Task.Run(() => _context.Contacts.FirstOrDefault(c => c.Id == id));
             return contact == null ? NotFound() : View(contact);
         }
 
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var contact = _context.Contacts.Find(id);
+            if (!IsAdmin())
+                return RedirectToAction("Login", "Admin");
+
+            var contact = await _context.Contacts.FindAsync(id);
             return contact == null ? NotFound() : View(contact);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Contact contact)
+        public async Task<IActionResult> Edit(Contact contact)
         {
-            if (!ModelState.IsValid) return View(contact);
+            if (!IsAdmin())
+                return RedirectToAction("Login", "Admin");
+
+            if (!ModelState.IsValid)
+                return View(contact);
 
             _context.Update(contact);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+
             TempData["Success"] = "Contact updated successfully!";
             return RedirectToAction(nameof(List));
         }
 
-        // GET: Contact/Delete/5
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var contact = _context.Contacts.FirstOrDefault(c => c.Id == id);
-            if (contact == null)
-            {
-                return NotFound();
-            }
-            return View(contact);
+            if (!IsAdmin())
+                return RedirectToAction("Login", "Admin");
+
+            var contact = await Task.Run(() => _context.Contacts.FirstOrDefault(c => c.Id == id));
+            return contact == null ? NotFound() : View(contact);
         }
 
-        // POST: Contact/DeleteConfirmed/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var contact = _context.Contacts.Find(id);
+            if (!IsAdmin())
+                return RedirectToAction("Login", "Admin");
+
+            var contact = await _context.Contacts.FindAsync(id);
             if (contact == null)
-            {
                 return NotFound();
-            }
 
             _context.Contacts.Remove(contact);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(List));
         }
-            [HttpPost]
-            [ValidateAntiForgeryToken]
-            public async Task<IActionResult> Submit(Contact contact)
-            {
-                if (!ModelState.IsValid)
-                    return RedirectToAction("Contact", "Home");
 
-                _context.Contacts.Add(contact);
-                await _context.SaveChangesAsync();
-
-                TempData["ShowCard"] = true;
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Submit(Contact contact)
+        {
+            if (!ModelState.IsValid)
                 return RedirectToAction("Contact", "Home");
-            }
 
-            //[HttpPost]
-            //public IActionResult SaveFeedback([FromBody] EmojiFeedback feedback)
-            //{
-            //    if (!string.IsNullOrWhiteSpace(feedback.Emoji))
-            //    {
-            //        // Log emoji feedback
-            //        Console.WriteLine($"User emoji feedback: {feedback.Emoji}");
-            //        return Ok();
-            //    }
-            //    return BadRequest();
-            //}
+            _context.Contacts.Add(contact);
+            await _context.SaveChangesAsync();
+
+            TempData["ShowCard"] = true;
+            return RedirectToAction("Contact", "Home");
         }
-
-        //public class EmojiFeedback
-        //{
-        //    public string Emoji { get; set; }
-        //}
-
+    }
 }

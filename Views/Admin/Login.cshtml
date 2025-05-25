@@ -1,0 +1,102 @@
+﻿@model VicStarDevPortfolio.Models.AdminLoginViewModel
+@{
+    ViewData["Title"] = "Admin Login";
+}
+
+<h2 class="text-center mb-4" style="color: orange;">Admin Login</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger text-center">
+        @TempData["Error"]
+    </div>
+}
+
+<form asp-action="Login" method="post" class="w-50 mx-auto p-4 border rounded shadow" id="loginForm">
+    <div class="mb-3">
+        <label asp-for="Username" class="form-label label-dynamic"></label>
+        <input asp-for="Username" class="form-control input-dynamic" />
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label label-dynamic"></label>
+        <div class="input-group">
+            <input asp-for="Password" type="password" class="form-control input-dynamic" id="passwordInput" />
+            <button type="button" class="btn icon-btn" onclick="togglePassword()" tabindex="-1" aria-label="Toggle password visibility">
+                <i class="bi bi-eye" id="eyeIcon"></i>
+                <span id="toggleText" class="ms-2">Show</span>
+            </button>
+        </div>
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Login</button>
+</form>
+
+<style>
+    #loginForm {
+        background-color: transparent;
+    }
+
+    /* Avoid animation flicker in dark mode */
+    body[data-bs-theme="dark"] .input-dynamic {
+        background-color: transparent !important;
+        color: white !important;
+        border-color: white !important;
+        transition: none !important; /* Prevent flicker */
+        box-shadow: none !important;
+    }
+
+    body[data-bs-theme="dark"] .label-dynamic,
+    body[data-bs-theme="dark"] .icon-btn i,
+    body[data-bs-theme="dark"] .icon-btn span {
+        color: white !important;
+        border-color: white !important;
+    }
+
+    body[data-bs-theme="light"] .input-dynamic {
+        background-color: transparent !important;
+        color: black !important;
+        border-color: black !important;
+    }
+
+    body[data-bs-theme="light"] .label-dynamic,
+    body[data-bs-theme="light"] .icon-btn i,
+    body[data-bs-theme="light"] .icon-btn span {
+        color: black !important;
+        border-color: black !important;
+    }
+
+    .icon-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    #eyeIcon {
+        font-size: 1.2rem;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        function togglePassword() {
+            const pwdInput = document.getElementById("passwordInput");
+            const icon = document.getElementById("eyeIcon");
+            const toggleText = document.getElementById("toggleText");
+
+            if (pwdInput.type === "password") {
+                pwdInput.type = "text";
+                icon.classList.replace("bi-eye", "bi-eye-slash");
+                toggleText.textContent = "Hide";
+            } else {
+                pwdInput.type = "password";
+                icon.classList.replace("bi-eye-slash", "bi-eye");
+                toggleText.textContent = "Show";
+            }
+        }
+    </script>
+
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
