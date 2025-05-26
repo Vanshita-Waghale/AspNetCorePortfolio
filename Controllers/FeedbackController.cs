@@ -1,45 +1,37 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using VicStarDevPortfolio.Data;
+using VicStarDevPortfolio.Models;
 
 namespace VicStarDevPortfolio.Controllers
 {
     [Route("Feedback")]
     public class FeedbackController : Controller
     {
-        // GET: /Feedback
-        [HttpGet]
-        public IActionResult Index()
+        private readonly ApplicationDbContext _context;
+
+        public FeedbackController(ApplicationDbContext context)
         {
-            return View();
+            _context = context;
         }
 
-        // POST: /Feedback/SaveHeart
         [HttpPost("SaveHeart")]
-        public IActionResult SaveHeart([FromBody] EmojiFeedbackModel model)
+        public IActionResult SaveHeart([FromBody] FeedbackDto data)
         {
-            if (model != null && !string.IsNullOrWhiteSpace(model.Emoji))
-            {
-                // TODO: Save emoji to DB or log
-                // Example: _context.EmojiFeedbacks.Add(new EmojiFeedback { Value = model.Emoji });
-                //          _context.SaveChanges();
+            // Get the latest contact entry (most recent)
+            var latestContact = _context.Contacts.OrderByDescending(c => c.SubmittedAt).FirstOrDefault();
 
-                return Ok(new { success = true, message = "Feedback saved." });
+            if (latestContact != null)
+            {
+                latestContact.LikeEmoji = data.Emoji;
+                _context.SaveChanges();
             }
 
-            return BadRequest(new { success = false, message = "Invalid data." });
+            return Ok(new { message = "Saved!" });
         }
-
-        //[HttpGet("List")]
-        //public IActionResult List()
-        //{
-        //    var feedbacks = _context.EmojiFeedbacks.OrderByDescending(f => f.SubmittedAt).ToList();
-        //    return View(feedbacks);
-        //}
-
     }
 
-    // Can also move this class to a separate file in the Models folder
-    public class EmojiFeedbackModel
+    public class FeedbackDto
     {
         public string Emoji { get; set; }
     }

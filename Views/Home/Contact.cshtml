@@ -56,7 +56,8 @@
         }
         else
         {
-            <form asp-controller="Contacts" asp-action="Submit" method="post" novalidate>
+            <form asp-controller="Home" asp-action="Contact" method="post" novalidate>
+
                 @Html.AntiForgeryToken()
 
                 <div class="form-group">
@@ -95,13 +96,28 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ emoji: emoji })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Server error: ' + response.status);
+                }
+                return response.json(); // optional if your server returns JSON
+            })
+            .then(data => {
+                console.log("Feedback saved:", data);
+                document.getElementById("finalThanks").style.display = "block";
+            })
+            .catch(error => {
+                console.error("Error saving feedback:", error);
+                alert("Oops! Something went wrong while saving your feedback.");
+                hasClicked = false; // allow retry
             });
-
-            document.getElementById("finalThanks").style.display = "block";
         }
     </script>
     @await Html.PartialAsync("_ValidationScriptsPartial")
 }
+
+
 
 <style>
     #contactSection {
