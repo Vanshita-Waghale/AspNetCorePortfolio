@@ -1,6 +1,11 @@
 ﻿<!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
+    <script>
+        // Apply saved theme before page fully loads to prevent flash
+        const savedTheme = localStorage.getItem("theme") || "dark";
+        document.documentElement.setAttribute("data-theme", savedTheme);
+    </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Portfolio</title>
@@ -72,20 +77,17 @@
         }
 
         @@keyframes glitterAnim {
-            0%
+            0% {
+                transform: scale(1);
+                opacity: 0.9;
+                filter: drop-shadow(0 0 3px var(--sparkle-color));
+            }
 
-        {
-            transform: scale(1);
-            opacity: 0.9;
-            filter: drop-shadow(0 0 3px var(--sparkle-color));
-        }
-
-        100% {
-            transform: translate(-50%, -50%) scale(0.5);
-            opacity: 0;
-            filter: drop-shadow(0 0 8px var(--sparkle-color));
-        }
-
+            100% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0;
+                filter: drop-shadow(0 0 8px var(--sparkle-color));
+            }
         }
     </style>
 
@@ -128,53 +130,35 @@
         document.addEventListener("DOMContentLoaded", function () {
             const savedTheme = localStorage.getItem("theme") || "dark";
             document.documentElement.setAttribute("data-theme", savedTheme);
-            updateButton(savedTheme);
             updateNavbar(savedTheme);
-
-            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
-            const navbarCollapse = document.getElementById('navbarContent');
-            const bsCollapse = new bootstrap.Collapse(navbarCollapse, { toggle: false });
-
-            navLinks.forEach(link => {
-                link.addEventListener('click', function () {
-                    if (navbarCollapse.classList.contains('show')) {
-                        bsCollapse.hide();
-                    }
-                });
-            });
+            updateButton(savedTheme);
         });
 
         function toggleTheme() {
-            const current = document.documentElement.getAttribute("data-theme");
-            const newTheme = current === "light" ? "dark" : "light";
+            const currentTheme = document.documentElement.getAttribute("data-theme");
+            const newTheme = currentTheme === "light" ? "dark" : "light";
+
             document.documentElement.setAttribute("data-theme", newTheme);
             localStorage.setItem("theme", newTheme);
-            updateButton(newTheme);
+
             updateNavbar(newTheme);
+            updateButton(newTheme);
+
+            updateVideoTheme();  // Ensure the video updates after changing the theme
         }
 
         function updateButton(theme) {
             const btn = document.getElementById("themeToggleBtn");
             btn.classList.remove("btn-light", "btn-dark");
-            if (theme === "light") {
-                btn.classList.add("btn-dark");
-                btn.textContent = "Switch to Dark Mode";
-            } else {
-                btn.classList.add("btn-light");
-                btn.textContent = "Switch to Light Mode";
-            }
+            btn.textContent = theme === "light" ? "Switch to Dark Mode" : "Switch to Light Mode";
+            btn.classList.add(theme === "light" ? "btn-dark" : "btn-light");
         }
 
         function updateNavbar(theme) {
             const navbar = document.getElementById("navbar");
             navbar.classList.remove("navbar-light", "bg-light", "navbar-dark", "bg-dark");
-            if (theme === "light") {
-                navbar.classList.add("navbar-light", "bg-light");
-            } else {
-                navbar.classList.add("navbar-dark", "bg-dark");
-            }
+            navbar.classList.add(theme === "light" ? "navbar-light bg-light" : "navbar-dark bg-dark");
         }
-
         document.addEventListener("mousemove", function (e) {
             if (e.target.closest('#themeToggleBtn')) return;
 
@@ -189,3 +173,6 @@
     </script>
 </body>
 </html>
+
+
+

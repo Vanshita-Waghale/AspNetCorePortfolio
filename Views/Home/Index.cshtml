@@ -20,7 +20,7 @@
         <!-- Learn More Button -->
         <a class="btn btn-warning mt-4" href="/Home/About">Learn more about me</a>
 
-        <!-- ⭐ Stats Bar (Simplified) -->
+        <!-- ⭐ Stats Bar -->
         <div class="stats-bar mt-4">
             <p>👀 Visitors: <strong>@ViewBag.TotalVisitors</strong></p>
             <p>❤️ Likes: <strong>@ViewBag.TotalLikes</strong></p>
@@ -28,12 +28,12 @@
         </div>
     </div>
 
-    <!-- Right Section with Splash Behind Image -->
+    <!-- Right Section with Theme Video -->
     <div class="right-section">
-        <div class="image-wrapper">
-            <img src="~/paint-splash.png" alt="Paint Splash" class="paint-splash" />
-            <img src="~/images/Photo4.png" alt="Profile Image" class="profile-image img-fluid" />
-        </div>
+        <video id="theme-video" class="theme-video" autoplay muted loop playsinline>
+            <source id="video-source" src="/videos/light-theme-video.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+        </video>
     </div>
 </div>
 
@@ -68,9 +68,34 @@
             }
             setTimeout(type, isDeleting ? 60 : 120);
         }
+               
+        document.addEventListener("DOMContentLoaded", function () {
+            const videoSource = document.getElementById("video-source");
+            const themeVideo = document.getElementById("theme-video");
 
-        document.addEventListener("DOMContentLoaded", () => {
-            type();
+            function updateVideoTheme() {
+                const theme = document.documentElement.getAttribute("data-theme") || "light";
+
+                const newSrc = theme === "dark"
+                    ? "/videos/dark-theme-video.mp4"
+                    : "/videos/light-theme-video.mp4";
+
+                if (videoSource.src !== newSrc) {
+                    videoSource.src = newSrc;
+                    themeVideo.load();
+                    themeVideo.play();
+                }
+            }
+
+            // Initial setup
+            updateVideoTheme();
+
+            // Observe theme changes dynamically
+            const observer = new MutationObserver(updateVideoTheme);
+            observer.observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ["data-theme"]
+            });
         });
     </script>
 }
@@ -102,7 +127,24 @@
         align-items: center;
         min-width: 280px;
         padding: 1rem;
+        margin-top: -170px;
+        border-radius: 30px;
+        overflow: hidden;
+        
     }
+
+
+    /* Make video fully responsive and maintain aspect ratio */
+    .theme-video {
+        width: 100%;
+        height: auto;
+        max-width: 450px;
+        border-radius: 5px;
+        object-fit:contain; /* change to cover or contain based on your video */
+        transition: all 0.4s ease;
+       
+    }
+
 
     .intro-title {
         font-size: 2.8rem;
@@ -134,24 +176,6 @@
         margin-left: 4px;
     }
 
-    @@keyframes blink {
-        0%, 100% {
-            opacity: 1;
-        }
-
-        50% {
-            opacity: 0;
-        }
-    }
-
-    .motivational-quote {
-        font-size: 1rem; /* 👈 SMALLER SIZE */
-        color: var(--quote-color);
-        margin-top: 30px;
-        max-width: 500px;
-        font-style: italic;
-    }
-
     .btn-warning {
         font-weight: 600;
         padding: 0.6rem 1.5rem;
@@ -162,116 +186,23 @@
         border: none;
         color: #000;
         animation: fadeInUp 1.2s ease;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
     }
 
         .btn-warning:hover {
             background-color: #ffd54f;
             color: #000;
+            text-decoration: none;
         }
 
-    .image-wrapper {
-        position: relative;
-        width: 100%;
-        max-width: 480px;
-        height: auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        animation: zoomIn 0.8s ease;
-    }
-
-    .paint-splash {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        z-index: 1;
-        animation: floatUpDown 4s ease-in-out infinite;
-    }
-
-    .profile-image {
-        position: relative;
-        z-index: 2;
-        width: 100%;
-        max-width: 380px;
-        height: auto;
-        transition: transform 0.3s ease;
-    }
-
-    @@keyframes floatUpDown {
-        0%, 100% {
-            transform: translateY(0);
-        }
-
-        50% {
-            transform: translateY(-15px);
-        }
-    }
-
-    @@keyframes shimmer {
-        0% {
-            background-position: 200% 0;
-        }
-
-        100% {
-            background-position: -200% 0;
-        }
-    }
-
-    @@keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-    }
-
-    @@keyframes slideInLeft {
-        from {
-            transform: translateX(-50px);
-            opacity: 0;
-        }
-
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-
-    @@keyframes fadeInUp {
-        from {
-            transform: translateY(30px);
-            opacity: 0;
-        }
-
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-
-    @@keyframes zoomIn {
-        from {
-            transform: scale(0.9);
-            opacity: 0;
-        }
-
-        to {
-            transform: scale(1);
-            opacity: 1;
-        }
-    }
-
-    /* ⭐ STATS BAR */
     .stats-bar {
         display: flex;
         gap: 25px;
         flex-wrap: wrap;
-        font-size: 1.2rem; /* 👈 LARGE SIZE */
+        font-size: 1.2rem;
         font-weight: 600;
-        background-color: transparent;
         padding: 12px 0;
     }
 
@@ -283,14 +214,23 @@
             font-weight: 700;
         }
 
-    /* 👇 Theme-specific styles */
+  
+    .motivational-quote {
+        font-size: 1rem;
+        margin-top: 30px;
+        max-width: 500px;
+        font-style: italic;
+    }
+
+    /* Theme-specific styling for visibility */
     body[data-theme='dark'] .motivational-quote {
-        color: #eee;
+        color: #eee; /* light color for dark mode */
     }
 
     body[data-theme='light'] .motivational-quote {
-        color: #333;
+        color: #333; /* dark color for light mode */
     }
+
 
     body[data-theme='dark'] .stats-bar strong {
         color: #fff;
@@ -300,80 +240,144 @@
         color: #000;
     }
 
+    /* Animations */
+    @@keyframes blink {
+        0%, 100%
+
+    {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    }
+
+    @@keyframes shimmer {
+        0%
+
+    {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+
+    }
+
+    @@keyframes fadeIn {
+        from
+
+    {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+    }
+
+    @@keyframes slideInLeft {
+        from
+
+    {
+        transform: translateX(-50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    }
+
+    @@keyframes fadeInUp {
+        from
+
+    {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    }
+
     /* Responsive Design */
     @@media (max-width: 992px) {
-        .intro-title {
-            font-size: 2.2rem;
-        }
+        .intro-title
 
-        .typing-container {
-            font-size: 1.2rem;
-        }
+    {
+        font-size: 2.2rem;
+    }
 
-        .motivational-quote {
-            font-size: 1rem;
-        }
+    .typing-container {
+        font-size: 1.2rem;
+    }
 
-        .image-wrapper {
-            max-width: 360px;
-        }
+    .theme-video {
+        max-width: 360px;
+    }
 
-        .profile-image {
-            max-width: 320px;
-        }
     }
 
     @@media (max-width: 768px) {
-        .home-container {
-            flex-direction: column;
-            text-align: center;
-            height: auto;
-            padding: 2rem 1rem;
-        }
+        .home-container
 
-        .left-section, .right-section {
-            width: 100%;
-            padding: 1rem 0;
-        }
+    {
+        flex-direction: column;
+        text-align: center;
+        height: auto;
+        padding: 2rem 1rem;
+    }
 
-        .image-wrapper {
-            max-width: 320px;
-        }
+    .left-section, .right-section {
+        width: 100%;
+        padding: 1rem 0;
+        margin-top: 0;
+    }
 
-        .profile-image {
-            max-width: 260px;
-        }
+    .theme-video {
+        max-width: 320px;
+    }
+
     }
 
     @@media (max-width: 480px) {
-        .intro-title {
-            font-size: 1.8rem;
-        }
+        .intro-title
 
-        .typing-container {
-            font-size: 1rem;
-        }
+    {
+        font-size: 1.8rem;
+    }
 
-        .motivational-quote {
-            font-size: 0.9rem;
-        }
+    .typing-container {
+        font-size: 1rem;
+    }
 
-        .btn-warning {
-            font-size: 0.9rem;
-        }
+    .motivational-quote {
+        font-size: 0.9rem;
+    }
 
-        .image-wrapper {
-            max-width: 240px;
-        }
+    .btn-warning {
+        font-size: 0.9rem;
+    }
 
-        .profile-image {
-            max-width: 200px;
-        }
+    .theme-video {
+        max-width: 240px;
+    }
 
-        .stats-bar {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-        }
+    .stats-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
     }
 </style>

@@ -3,25 +3,22 @@ using VicStarDevPortfolio.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
 using Microsoft.Extensions.Configuration;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
-// Add distributed memory cache (required for session)
 builder.Services.AddDistributedMemoryCache();
-
-// Add session service with 30 minutes timeout
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(1);
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Extended to 30 mins
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
 
+// Configure EF Core
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -35,14 +32,9 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseStaticFiles();
-
+app.UseStaticFiles();  // Make sure this is called before UseRouting
 app.UseRouting();
-
-// Add session middleware (IMPORTANT: after routing and before authorization)
 app.UseSession();
-
 app.UseAuthorization();
 
 app.MapControllerRoute(
