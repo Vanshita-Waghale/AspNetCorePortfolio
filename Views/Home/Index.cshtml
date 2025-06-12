@@ -48,6 +48,8 @@
             const currentWord = roles[currentIndex];
             const display = document.getElementById("typed-text");
 
+            if (!display) return; // safety check
+
             if (isDeleting) {
                 charIndex--;
                 display.textContent = currentWord.substring(0, charIndex);
@@ -68,6 +70,12 @@
             }
             setTimeout(type, isDeleting ? 60 : 120);
         }
+
+        // ✅ START TYPING AFTER PAGE LOAD
+        document.addEventListener("DOMContentLoaded", function () {
+            type();
+        });
+
                
         document.addEventListener("DOMContentLoaded", function () {
             const videoSource = document.getElementById("video-source");
@@ -130,21 +138,16 @@
         margin-top: -170px;
         border-radius: 30px;
         overflow: hidden;
-        
     }
 
-
-    /* Make video fully responsive and maintain aspect ratio */
     .theme-video {
         width: 100%;
         height: auto;
         max-width: 450px;
         border-radius: 5px;
-        object-fit:contain; /* change to cover or contain based on your video */
+        object-fit: contain;
         transition: all 0.4s ease;
-       
     }
-
 
     .intro-title {
         font-size: 2.8rem;
@@ -168,12 +171,20 @@
         align-items: center;
     }
 
+    #typed-text {
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: inherit;
+        transition: color 0.3s ease-in-out;
+    }
+
     .cursor {
         font-weight: bold;
         font-size: 1.4rem;
         color: #f9a825;
         animation: blink 0.7s infinite;
         margin-left: 4px;
+        transition: color 0.3s ease-in-out;
     }
 
     .btn-warning {
@@ -214,7 +225,6 @@
             font-weight: 700;
         }
 
-  
     .motivational-quote {
         font-size: 1rem;
         margin-top: 30px;
@@ -222,15 +232,13 @@
         font-style: italic;
     }
 
-    /* Theme-specific styling for visibility */
     body[data-theme='dark'] .motivational-quote {
-        color: #eee; /* light color for dark mode */
+        color: #eee;
     }
 
     body[data-theme='light'] .motivational-quote {
-        color: #333; /* dark color for light mode */
+        color: #333;
     }
-
 
     body[data-theme='dark'] .stats-bar strong {
         color: #fff;
@@ -240,7 +248,14 @@
         color: #000;
     }
 
-    /* Animations */
+    body[data-theme='dark'] #typed-text {
+        color: #fff;
+    }
+
+    body[data-theme='light'] #typed-text {
+        color: #222;
+    }
+
     @@keyframes blink {
         0%, 100%
 
@@ -310,7 +325,6 @@
 
     }
 
-    /* Responsive Design */
     @@media (max-width: 992px) {
         .intro-title
 
@@ -318,7 +332,8 @@
         font-size: 2.2rem;
     }
 
-    .typing-container {
+    .typing-container,
+    #typed-text {
         font-size: 1.2rem;
     }
 
@@ -338,7 +353,8 @@
         padding: 2rem 1rem;
     }
 
-    .left-section, .right-section {
+    .left-section,
+    .right-section {
         width: 100%;
         padding: 1rem 0;
         margin-top: 0;
@@ -357,7 +373,8 @@
         font-size: 1.8rem;
     }
 
-    .typing-container {
+    .typing-container,
+    #typed-text {
         font-size: 1rem;
     }
 
